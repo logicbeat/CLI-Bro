@@ -1,0 +1,140 @@
+{
+  "name": "cli-bro",
+  "displayName": "CLI Bro",
+  "description": "An extension which act as a companion to CLI coding agents like Claude ",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.145.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "cliBro.openAgent",
+        "title": "Open Agent Terminal",
+        "category": "CLI Bro",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "cliBro.sendSelection",
+        "title": "Send Selection to Agent",
+        "category": "CLI Bro",
+        "icon": "$(send)"
+      },
+      {
+        "command": "cliBro.sendFile",
+        "title": "Send to Agent",
+        "category": "CLI Bro",
+        "icon": "$(send)"
+      },
+      {
+        "command": "cliBro.askFix",
+        "title": "Ask Agent to Fix Problem",
+        "category": "CLI Bro",
+        "icon": "$(wand)"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "cliBro.sendSelection",
+          "group": "cliBro@1"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "cliBro.sendFile",
+          "group": "cliBro@1"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "cliBro.sendFile",
+          "group": "cliBro@1"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "cliBro.sendSelection",
+        "key": "ctrl+alt+k",
+        "mac": "cmd+alt+k",
+        "when": "editorTextFocus"
+      }
+    ],
+    "configuration": {
+      "title": "CLI Bro",
+      "properties": {
+        "cliBro.agentCommand": {
+          "type": "string",
+          "default": "claude",
+          "description": "Command used to launch the CLI agent (e.g. claude, codex, gemini, aider)."
+        },
+        "cliBro.terminalName": {
+          "type": "string",
+          "default": "CLI Bro Agent",
+          "description": "Name of the terminal that runs the agent."
+        },
+        "cliBro.startupDelayMs": {
+          "type": "number",
+          "default": 2000,
+          "minimum": 0,
+          "description": "Milliseconds to wait after launching the agent before sending text to it."
+        },
+        "cliBro.fixContextLines": {
+          "type": "number",
+          "default": 3,
+          "minimum": 0,
+          "description": "Lines of context to include around a problem when asking the agent to fix it."
+        },
+        "cliBro.fixMinSeverity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "info",
+            "hint"
+          ],
+          "default": "warning",
+          "description": "Minimum problem severity that offers an \"Ask agent to fix\" quick fix."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run package",
+    "compile": "pnpm run check-types && pnpm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "pnpm run check-types && pnpm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.145.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "24.x",
+    "typescript-eslint": "^8.61.1",
+    "eslint": "^10.5.0",
+    "esbuild": "^0.28.1",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^6.0.3",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^3.0.0"
+  },
+  "overrides": {
+    "diff": "^8.0.4",
+    "serialize-javascript": "^7.0.6"
+  }
+}
